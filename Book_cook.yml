@@ -1,0 +1,30 @@
+салат:
+- ingredient_name: помидоры
+  measure: гр.
+  quantity: 100
+- ingredient_name: огурцы
+  measure: гр.
+  quantity: 100
+- ingredient_name: масло
+  measure: мл.
+  quantity: 100
+- ingredient_name: лук
+  measure: шт.
+  quantity: 1
+стейк:
+- ingredient_name: говядина
+  measure: гр.
+  quantity: 300
+- ingredient_name: специи
+  measure: гр.
+  quantity: 5
+- ingredient_name: масло
+  measure: мл.
+  quantity: 10
+яичница:
+- ingredient_name: яйца
+  measure: шт.
+  quantity: 2
+- ingredient_name: помидоры
+  measure: гр.
+  quantity: 100
