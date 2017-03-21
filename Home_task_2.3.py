@@ -1,32 +1,41 @@
 # -*- coding: utf-8 -*-
 import json
 import yaml
+import os
 
-recipes_book = {
-    'яичница': [
-        {'ingredient_name': 'яйца', 'quantity': 2, 'measure': 'шт.'},
-        {'ingredient_name': 'помидоры', 'quantity': 100, 'measure': 'гр.'}
-        ],
-    'стейк': [
-        {'ingredient_name': 'говядина', 'quantity': 300 , 'measure': 'гр.'},
-        {'ingredient_name': 'специи', 'quantity': 5, 'measure': 'гр.'},
-        {'ingredient_name': 'масло', 'quantity': 10, 'measure': 'мл.'}
-        ],
-    'салат': [
-        {'ingredient_name': 'помидоры', 'quantity': 100, 'measure': 'гр.'},
-        {'ingredient_name': 'огурцы', 'quantity': 100, 'measure': 'гр.'},
-        {'ingredient_name': 'масло', 'quantity': 100, 'measure': 'мл.'},
-        {'ingredient_name': 'лук', 'quantity': 1, 'measure': 'шт.'}
-        ]
-    }
+# Ver. 2017.03.21
 
-with open('Book_cook.json', 'w', encoding='utf-8') as f:
-    json.dump(recipes_book, f, ensure_ascii=False, indent=2)
+def file_cook_book(my_file_path):
+    if my_file_path.endswith('.json'):
+        with open('Book_cook.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    else:
+        with open('Book_cook.yml', 'r', encoding='utf-8') as f:
+            return yaml.load(f)
 
-with open('Book_cook.yml', 'w', encoding='utf-8') as f:
-    yaml.dump(recipes_book, f, default_flow_style=False, allow_unicode=True, indent=2)
+def get_shop_list_by_dishes(dishes, person_count, my_file_path):
+    shop_list = {}
+    for dish in dishes:
+        for ingridient in file_cook_book(my_file_path)[dish]:
+            new_shop_list_item = dict(ingridient)
+            new_shop_list_item['quantity'] *= person_count
+            if new_shop_list_item['ingredient_name'] not in shop_list:
+                shop_list[new_shop_list_item['ingredient_name']] = new_shop_list_item
+            else:
+                shop_list[new_shop_list_item['ingredient_name']]['quantity'] += new_shop_list_item['quantity']
+    return shop_list
 
-with open('Book_cook.json', 'r') as f:
-    json_data = json.load(f)
-    for line in f.readlines():
-        print(line.strip())
+def print_shop_list(shop_list):
+    for shop_list_item in shop_list.values():
+        print('{ingredient_name}: {quantity} {measure} '.format(**shop_list_item))
+
+def create_shop_list():
+    my_file_path = input('Enter the path to your file (default path: Book_cook.json):')
+    if not my_file_path:
+        my_file_path = 'Book_cook.json'
+    person_count = int(input('Enter count of person: '))
+    dishes = input('Enter dishes for one person (you can list separated by "," without space): ').lower().split(',')
+    shop_list = get_shop_list_by_dishes(dishes, person_count, my_file_path)
+    print_shop_list(shop_list)
+
+create_shop_list()
